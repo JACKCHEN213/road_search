@@ -1,0 +1,18 @@
+{
+    "name": "ehigh/road",
+    "autoload": {
+        "psr-4": {
+            "common\\": "common/",
+            "strategy\\": "strategy/"
+        }
+    },
+    "authors": [
+        {
+            "name": "chenchao",
+            "email": "1366294101@qq.com"
+        }
+    ],
+    "require": {
+      "ext-json": "*"
+    }
+}
