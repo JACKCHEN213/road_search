@@ -3,6 +3,7 @@
 use common\Matrix;
 use strategy\AStar;
 use strategy\BreadthFirstSearch;
+use strategy\Bresenham;
 use strategy\Dijkstra;
 use strategy\GreedyBestFirstSearch;
 
@@ -20,3 +21,5 @@ $greedy_best_first_search = new GreedyBestFirstSearch($map->getPoint(), $map->ge
 $greedy_best_first_search->start();
 $a_star = new AStar($map->getPoint(), $map->getPoint(7, 5), $map);
 $a_star->start();
+$bresenham = new Bresenham($map->getPoint(), $map->getPoint(7, 5), $map);
+$bresenham->start();

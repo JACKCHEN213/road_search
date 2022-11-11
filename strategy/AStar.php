@@ -27,7 +27,7 @@ class AStar extends Base
             $current_point = $this->popNextPoint($this->open_list);
             if ($current_point->equal($this->dst_point)) {
                 $is_find = true;
-                break;
+                // break;
             }
             $this->close_list[] = $current_point;
             $adjoin_points = $current_point->getAdjoinPoints();

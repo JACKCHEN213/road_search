@@ -43,10 +43,10 @@ abstract class Map
         return array_reverse($roads);
     }
 
-    public function getPoint($x = 0, $y = 0): Point
+    public function getPoint($x = 0, $y = 0): ?Point
     {
         if (!isset($this->map[$x][$y])) {
-            throw new \Exception("点不存在");
+            return null;
         }
         return $this->map[$x][$y];
     }
