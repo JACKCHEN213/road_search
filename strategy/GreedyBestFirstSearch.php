@@ -46,8 +46,8 @@ class GreedyBestFirstSearch extends Base
                     $this->open_list[] = $adjoin_point;
                     $adjoin_point->parent = $current_point;
                     $adjoin_point->cost = $adjoin_point->getPrice() + $current_point->cost;
-                    $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
-                    // $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
+                    // $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                    $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
                     // $adjoin_point->distance = $current_point->distance + $this->getEuclideanDistance($adjoin_point);
                 }
             }

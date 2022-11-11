@@ -27,6 +27,7 @@ abstract class Base
 
     /**
      * 曼哈顿距离
+     * 只允许朝上下左右四个方向移动
      */
     protected function getManhattanDistance(Point $point)
     {
@@ -35,6 +36,7 @@ abstract class Base
 
     /**
      * 对角线距离
+     * 允许朝八个方向移动
      */
     protected function getDiagonalDistance(Point $point)
     {
@@ -54,6 +56,7 @@ abstract class Base
 
     /**
      * 欧几里得距离
+     * 允许朝任何方向移动
      */
     protected function getEuclideanDistance(Point $point)
     {

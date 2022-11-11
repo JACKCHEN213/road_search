@@ -38,11 +38,15 @@ class AStar extends Base
                 if (!$this->inPoints($adjoin_point, $this->open_list)) {
                     $adjoin_point->parent = $current_point;
                     $adjoin_point->cost = $current_point->cost + $adjoin_point->getPrice();
-                    $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                    // $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                    $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
+                    // $adjoin_point->distance = $current_point->distance + $this->getEuclideanDistance($adjoin_point);
                     $this->open_list[] = $adjoin_point;
                 } else {
                     $new_cost = $current_point->cost + $adjoin_point->getPrice();
-                    $new_distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                    // $new_distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                    $new_distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
+                    // $new_distance = $current_point->distance + $this->getEuclideanDistance($adjoin_point);
                     if ($new_distance + $new_cost < $adjoin_point->cost + $adjoin_point->distance) {
                         $adjoin_point->cost = $new_cost;
                         $adjoin_point->distance = $new_distance;
