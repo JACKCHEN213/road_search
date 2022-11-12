@@ -13,6 +13,10 @@
         }
     ],
     "require": {
-      "ext-json": "*"
+      "ext-json": "*",
+      "php":  ">=7.4"
+    },
+    "suggest": {
+        "php":  ">=7.4"
     }
 }
