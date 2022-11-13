@@ -33,25 +33,19 @@ class Matrix extends Map
         return $this;
     }
 
-    private function setEdge(Point &$point, $x, $y): Matrix
+    private function setEdge(Point &$point, $x, $y): void
     {
         if (isset($this->map[$x][$y]) && !$point->isAdjoin($this->map[$x][$y])) {
             $point->setAdjoin($this->map[$x][$y]);
             $this->map[$x][$y]->setAdjoin($point);
         }
-        return $this;
     }
 
-    private function setAdjoin(Point $point)
+    private function setAdjoin(Point $point, array $adjoins)
     {
-        $this->setEdge($point, $point->x - 1, $point->y - 1)
-            ->setEdge($point, $point->x - 1, $point->y)
-            ->setEdge($point, $point->x - 1, $point->y + 1)
-            ->setEdge($point, $point->x, $point->y - 1)
-            ->setEdge($point, $point->x, $point->y + 1)
-            ->setEdge($point, $point->x + 1, $point->y - 1)
-            ->setEdge($point, $point->x + 1, $point->y)
-            ->setEdge($point, $point->x + 1, $point->y + 1);
+        foreach ($adjoins as $adjoin) {
+            $this->setEdge($point, $adjoin[0], $adjoin[1]);
+        }
     }
 
     public function initMap()
@@ -62,7 +56,6 @@ class Matrix extends Map
             $this->map[] = [];
             for ($j = 0; $j < $this->col_len; $j++) {
                 $this->map[$i][$j] = new Point($i, $j);
-                $this->setAdjoin($this->map[$i][$j]);
             }
         }
     }
@@ -72,6 +65,7 @@ class Matrix extends Map
         foreach ($this->map as $i => $row) {
             foreach ($row as $j => $point) {
                 if (isset($this->extra[$i]) && isset($this->extra[$i][$j])) {
+                    $this->setAdjoin($this->map[$i][$j], $this->extra[$i][$j]['adjoins']);
                     $this->map[$i][$j]->setValue($this->extra[$i][$j]['value']);
                     if ($this->extra[$i][$j]['block']) {
                         $this->map[$i][$j]->setBlock($this->extra[$i][$j]['block']);
