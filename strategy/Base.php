@@ -67,7 +67,7 @@ abstract class Base
     }
 
 
-    public function inPoints(Point $detect_point, array $points): bool
+    public static function inPoints(Point $detect_point, array $points): bool
     {
         foreach ($points as $point) {
             if ($detect_point->equal($point)) {

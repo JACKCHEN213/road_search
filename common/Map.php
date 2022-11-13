@@ -73,6 +73,9 @@ abstract class Map
         }
         return $this;
     }
+
+    abstract public function getAdjacentMatrix(array $points);
+
     abstract public function getDirectionSign(Point $previous_point, Point $next_point);
 
     abstract public function drawMap();

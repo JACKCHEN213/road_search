@@ -3,6 +3,7 @@
 namespace common;
 
 use Exception;
+use strategy\Base;
 
 class Matrix extends Map
 {
@@ -102,6 +103,28 @@ class Matrix extends Map
             }
         }
         return $max_length;
+    }
+
+    public function getAdjacentMatrix(array $points): array
+    {
+        $adjacent_matrix = [];
+        $length = count($points);
+        for ($i = 0; $i < $length; $i++) {
+            $adjacent_matrix[$i] = [];
+            $adjoins = $points[$i]->getAdjoinPoints();
+            for ($j = 0; $j < $length; $j++) {
+                if ($j == $i) {
+                    $adjacent_matrix[$i][$j] = 0;
+                    continue;
+                }
+                if (!Base::inPoints($points[$j], $adjoins)) {
+                    $adjacent_matrix[$i][$j] = 'inf';
+                    continue;
+                }
+                $adjacent_matrix[$i][$j] = $points[$j]->getPrice();
+            }
+        }
+        return $adjacent_matrix;
     }
 
     public function drawMap()
