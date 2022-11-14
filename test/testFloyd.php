@@ -6,9 +6,16 @@ require_once "../vendor/autoload.php";
 
 // 获取邻接矩阵
 $nodes = json_decode(file_get_contents('../assets/nodes_7x7.json'), true);
-// $nodes = json_decode(file_get_contents('../assets/nodes_6x6.json'), true);
-// $nodes = json_decode(file_get_contents('../assets/nodes_5x5.json'), true);
-Floyd::printAdjacentMatrix($nodes['adjacent_matrix'], $nodes['names']);
-list($nodes['adjacent_matrix'], $path) = Floyd::getNearestDistance($nodes['adjacent_matrix']);
-Floyd::printAdjacentMatrix($nodes['adjacent_matrix'], $nodes['names']);
-// Floyd::getPath(0, count($nodes['adjacent_matrix']) - 1, $path, $nodes['names']);
+$nodes = json_decode(file_get_contents('../assets/nodes_6x6.json'), true);
+$nodes = json_decode(file_get_contents('../assets/nodes_5x5.json'), true);
+$nodes = json_decode(file_get_contents('../assets/nodes_3x3.json'), true);
+$adjacent_matrix = $nodes['adjacent_matrix'];
+$names = $nodes['names'];
+
+Floyd::printAdjacentMatrix($adjacent_matrix, $names);
+list($adjacent_matrix, $path) = Floyd::getNearestDistance($adjacent_matrix, $names);
+Floyd::printAdjacentMatrix($adjacent_matrix, $names);
+$road = Floyd::getPath($adjacent_matrix, 0, count($adjacent_matrix) - 1, $path);
+echo "<{$names[0]},{$names[count($adjacent_matrix) - 1]}>: " . implode(" -> ", array_map(function ($node) use ($names) {
+        return $names[$node];
+    }, $road)) . PHP_EOL;

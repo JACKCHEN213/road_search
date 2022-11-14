@@ -10,13 +10,13 @@ class Floyd
         foreach ($adjacent_matrix as $i => $row) {
             $path[$i] = [];
             foreach ($row as $j => $distance) {
-                $path[$i][$j] = $j;
+                $path[$i][$j] = $i;
             }
         }
         return $path;
     }
 
-    public static function getNearestDistance(array $adjacent_matrix): array
+    public static function getNearestDistance(array $adjacent_matrix, array $names): array
     {
         $path = self::initPath($adjacent_matrix);
         for ($i = 0; $i < count($adjacent_matrix); $i++) {
@@ -34,8 +34,9 @@ class Floyd
                     // j => i => k < j => k
                     $tmp = ($adjacent_matrix[$j][$i] == 'inf' || $adjacent_matrix[$i][$k] == 'inf') ?
                         'inf' : $adjacent_matrix[$j][$i] + $adjacent_matrix[$i][$k];
-                    if ($adjacent_matrix[$j][$k] == 'inf') {
+                    if ($adjacent_matrix[$j][$k] == 'inf' && $tmp != 'inf') {
                         $adjacent_matrix[$j][$k] = $tmp;
+                        $path[$j][$k] = $path[$i][$k];
                     } elseif ($tmp != 'inf') {
                         if ($tmp < $adjacent_matrix[$j][$k]) {
                             $adjacent_matrix[$j][$k] = $tmp;
@@ -44,6 +45,7 @@ class Floyd
                     }
                 }
             }
+            // self::printAdjacentMatrix($adjacent_matrix, $names);
         }
         return [$adjacent_matrix, $path];
     }
@@ -89,16 +91,14 @@ class Floyd
         echo str_repeat("*", $output_length) . PHP_EOL;
     }
 
-    public static function getPath($start, $end, array $path, array $names)
+    public static function getPath(array $adjacent_matrix, $start, $end, array $path)
     {
-        // TODO: 路径有问题
-        return null;
-        echo "start = {$start}, end = {$end}\n";
         if ($path[$start][$end] == $start) {
-            echo "{$names[$start]} {$names[$end]}";
+            return [$start, $end];
         } else {
-            self::getPath($start, $path[$start][$end], $path, $names);
-            echo "{$names[$end]} ";
+            $ret = self::getPath($adjacent_matrix, $start, $path[$start][$end], $path);
+            array_push($ret, $end);
+            return $ret;
         }
     }
 }
