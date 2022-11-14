@@ -1,26 +1,14 @@
 <?php
 
-use common\Matrix;
-use strategy\AStar;
 use strategy\Floyd;
-
-;
 
 require_once "../vendor/autoload.php";
 
-$asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
-$extra = $asset_8x8['simple1'];
-
-$map = new Matrix(8, 8, $extra);
-$src_point = $map->getPoint();
-$dst_point = $map->getPoint(7, 5);
-$a_star = new AStar($src_point, $dst_point, $map);
-// 取消标准输出
-ob_start();
-$a_star->start();
-$content = ob_get_contents();
-ob_end_clean();
-
 // 获取邻接矩阵
-$adjacent_matrix = $map->getAdjacentMatrix($map->getRoad($dst_point));
-Floyd::getNearestDistance($adjacent_matrix, $src_point, $dst_point);
+$nodes = json_decode(file_get_contents('../assets/nodes_7x7.json'), true);
+// $nodes = json_decode(file_get_contents('../assets/nodes_6x6.json'), true);
+// $nodes = json_decode(file_get_contents('../assets/nodes_5x5.json'), true);
+Floyd::printAdjacentMatrix($nodes['adjacent_matrix'], $nodes['names']);
+list($nodes['adjacent_matrix'], $path) = Floyd::getNearestDistance($nodes['adjacent_matrix']);
+Floyd::printAdjacentMatrix($nodes['adjacent_matrix'], $nodes['names']);
+// Floyd::getPath(0, count($nodes['adjacent_matrix']) - 1, $path, $nodes['names']);

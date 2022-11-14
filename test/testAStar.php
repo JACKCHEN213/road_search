@@ -1,7 +1,7 @@
 <?php
 
 use common\Matrix;
-use strategy\AStar;;
+use strategy\AStar;
 
 require_once "../vendor/autoload.php";
 

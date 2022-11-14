@@ -1,0 +1,11 @@
+{
+  "adjacent_matrix": [
+    [0, 50, 10, "inf", 45, "inf"],
+    ["inf", 0, 15, "inf", 10, "inf"],
+    [20, "inf", 0, 15, "inf", "inf"],
+    ["inf", 20, "inf", 0, 35, "inf"],
+    ["inf", "inf", "inf", 30, 0, "inf"],
+    ["inf", "inf", "inf", 3, "inf", 0]
+  ],
+  "names": ["V0", "V1", "V2", "V3", "V4", "V5"]
+}
