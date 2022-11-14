@@ -20,13 +20,14 @@ class Floyd
     {
         $path = self::initPath($adjacent_matrix);
         for ($i = 0; $i < count($adjacent_matrix); $i++) {
-            // i为目标
+            // i插入的点， (j -> i -> k) < (j -> k)
             for ($j = 0; $j < count($adjacent_matrix); $j++) {
-                // j为中转
+                // j为起始点
                 if ($i == $j) {
                     continue;
                 }
                 for ($k = 0; $k < count($adjacent_matrix); $k++) {
+                    // k为终止点
                     if ($k == $i || $k == $j) {
                         continue;
                     }
