@@ -18,4 +18,4 @@ Floyd::printAdjacentMatrix($adjacent_matrix, $names);
 $road = Floyd::getPath($adjacent_matrix, 0, count($adjacent_matrix) - 1, $path);
 echo "<{$names[0]},{$names[count($adjacent_matrix) - 1]}>: " . implode(" -> ", array_map(function ($node) use ($names) {
         return $names[$node];
-    }, $road)) . PHP_EOL;
+}, $road)) . PHP_EOL;
