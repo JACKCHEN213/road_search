@@ -25,12 +25,8 @@ class BidirectionalAStar extends AStar
         $this->dst_open_list[] = $this->dst_point;
         while ($this->open_list && $this->dst_open_list) {
             $current_point = $this->popNextPoint($this->open_list);
-            $dst_current_point = $this->popNextPoint($this->dst_open_list);
             $this->close_list[] = $current_point;
-            $this->dst_close_list[] = $dst_current_point;
-
             $adjoin_points = $current_point->getAdjoinPoints();
-            $dst_adjoin_points = $dst_current_point->getAdjoinPoints();
             foreach ($adjoin_points as $adjoin_point) {
                 if ($this->inPoints($adjoin_point, $this->close_list)) {
                     continue;
@@ -54,6 +50,10 @@ class BidirectionalAStar extends AStar
                     }
                 }
             }
+
+            $dst_current_point = $this->popNextPoint($this->dst_open_list);
+            $this->dst_close_list[] = $dst_current_point;
+            $dst_adjoin_points = $dst_current_point->getAdjoinPoints();
             foreach ($dst_adjoin_points as $dst_adjoin_point) {
                 if ($this->inPoints($dst_adjoin_point, $this->dst_close_list)) {
                     continue;
@@ -80,6 +80,7 @@ class BidirectionalAStar extends AStar
                     }
                 }
             }
+
             // 判断open_list是否重叠
             foreach ($this->open_list as $point) {
                 if ($this->inPoints($point, $this->dst_open_list)) {
