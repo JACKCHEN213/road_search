@@ -299,17 +299,17 @@ class Matrix extends Map
     {
         $this->initExtra();
 
-        echo str_repeat("=", 37) . PHP_EOL;
-        echo "| (x, y, block, price, cost, value) |" . PHP_EOL;
+        echo str_repeat("=", 47) . PHP_EOL;
+        echo "| (x, y, block, price, cost, value, distance) |" . PHP_EOL;
 
-        echo str_repeat("=", 37) . PHP_EOL;
+        echo str_repeat("=", 47) . PHP_EOL;
         foreach ($points as $point) {
             $output = sprintf(
-                "| %-33s |",
-                "({$point->x}, {$point->y}, {$point->getBlock()}, {$point->getPrice()}, {$point->cost}, {$point->getValue()})"
+                "| %-44s |",
+                "({$point->x}, {$point->y}, {$point->getBlock()}, {$point->getPrice()}, {$point->cost}, {$point->getValue()}， {$point->distance})"
             );
             echo $output . PHP_EOL;
         }
-        echo str_repeat("=", 37) . PHP_EOL;
+        echo str_repeat("=", 47) . PHP_EOL;
     }
 }
