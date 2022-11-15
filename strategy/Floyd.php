@@ -32,12 +32,12 @@ class Floyd
                         continue;
                     }
                     // j => i => k < j => k
-                    $tmp = ($adjacent_matrix[$j][$i] == 'inf' || $adjacent_matrix[$i][$k] == 'inf') ?
+                    $tmp = ($adjacent_matrix[$j][$i] === 'inf' || $adjacent_matrix[$i][$k] === 'inf') ?
                         'inf' : $adjacent_matrix[$j][$i] + $adjacent_matrix[$i][$k];
-                    if ($adjacent_matrix[$j][$k] == 'inf' && $tmp != 'inf') {
+                    if ($adjacent_matrix[$j][$k] === 'inf' && $tmp !== 'inf') {
                         $adjacent_matrix[$j][$k] = $tmp;
                         $path[$j][$k] = $path[$i][$k];
-                    } elseif ($tmp != 'inf') {
+                    } elseif ($tmp !== 'inf') {
                         if ($tmp < $adjacent_matrix[$j][$k]) {
                             $adjacent_matrix[$j][$k] = $tmp;
                             $path[$j][$k] = $path[$i][$k];

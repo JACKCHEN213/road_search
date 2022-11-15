@@ -108,9 +108,11 @@ class Matrix extends Map
     public function getAdjacentMatrix(array $points): array
     {
         $adjacent_matrix = [];
+        $names = [];
         $length = count($points);
         for ($i = 0; $i < $length; $i++) {
             $adjacent_matrix[$i] = [];
+            $names[] = 'V' . $points[$i]->x . $points[$i]->y;
             $adjoins = $points[$i]->getAdjoinPoints();
             for ($j = 0; $j < $length; $j++) {
                 if ($j == $i) {
@@ -124,7 +126,7 @@ class Matrix extends Map
                 $adjacent_matrix[$i][$j] = $points[$j]->getPrice();
             }
         }
-        return $adjacent_matrix;
+        return [$adjacent_matrix, $names];
     }
 
     public function drawMap()
