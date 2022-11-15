@@ -25,9 +25,7 @@ class BidirectionalAStar extends AStar
         $this->dst_open_list[] = $this->dst_point;
         while ($this->open_list && $this->dst_open_list) {
             $current_point = $this->popNextPoint($this->open_list);
-            $current_point->children = [];
             $dst_current_point = $this->popNextPoint($this->dst_open_list);
-            $dst_current_point->children = [];
             $this->close_list[] = $current_point;
             $this->dst_close_list[] = $dst_current_point;
 
@@ -39,7 +37,6 @@ class BidirectionalAStar extends AStar
                 }
                 if (!$this->inPoints($adjoin_point, $this->open_list)) {
                     $adjoin_point->parent = $current_point;
-                    $current_point->children[] = $adjoin_point;
                     $adjoin_point->cost = $current_point->cost + $adjoin_point->getPrice();
                     // $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
                     $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
@@ -54,7 +51,6 @@ class BidirectionalAStar extends AStar
                         $adjoin_point->cost = $new_cost;
                         $adjoin_point->distance = $new_distance;
                         $adjoin_point->parent = $current_point;
-                        $current_point->children[] = $adjoin_point;
                     }
                 }
             }
@@ -64,7 +60,6 @@ class BidirectionalAStar extends AStar
                 }
                 if (!$this->inPoints($dst_adjoin_point, $this->dst_open_list)) {
                     $dst_adjoin_point->parent = $dst_current_point;
-                    $dst_current_point->children[] = $dst_adjoin_point;
                     $dst_adjoin_point->cost = $dst_current_point->cost + $dst_adjoin_point->getPrice();
                     // $dst_adjoin_point->distance = $dst_current_point->distance
                     // + $this->getManhattanDistance($dst_adjoin_point);
@@ -82,7 +77,6 @@ class BidirectionalAStar extends AStar
                         $dst_adjoin_point->cost = $new_cost;
                         $dst_adjoin_point->distance = $new_distance;
                         $dst_adjoin_point->parent = $dst_current_point;
-                        $dst_current_point->children[] = $dst_adjoin_point;
                     }
                 }
             }
@@ -90,18 +84,58 @@ class BidirectionalAStar extends AStar
             foreach ($this->open_list as $point) {
                 if ($this->inPoints($point, $this->dst_open_list)) {
                     /**
-                     * TODO: 队首和队尾怎么拼接
-                     * 队首和队尾在open_list
-                     * 队首在open_list、队尾在close_list
-                     * 队首在close_list、队尾在open_list
+                     * TODO: 队首和队尾怎么拼接，相交结点的父节点只能指向一边，另一边该怎么拼接
                      */
                     $is_find = true;
-                    var_dump($point->getPointInfo());
-                    $this->map->drawRoadsWithCost($this->map->getRoad($point));
-                    $this->map->drawRoadsWithCost($this->map->getRoad($dst_current_point));
-                    return;
+                    $road = $this->map->getRoad($point);
+                    if ($road[0]->equal($this->src_point)) {
+                        // point是src_point的子节点
+                        // 队尾在dst_close_list中
+                        $dst_child = null;
+                        while ($this->dst_close_list) {
+                            $dst_point = array_shift($this->dst_close_list);
+                            $adjoin_points = $dst_point->getAdjoinPoints();
+                            if ($this->inPoints($point, $adjoin_points)) {
+                                $dst_child = $dst_point;
+                                break;
+                            }
+                        }
+                        if ($dst_child === null) {
+                            return null;
+                        }
+                        while ($dst_child) {
+                            $parent_point = $dst_child->parent;
+                            $dst_child->parent = $point;
+                            $point = $dst_child;
+                            $dst_child = $parent_point;
+                        }
+                    } else {
+                        // point是dst_point的子节点
+                        // 队首在close_list
+                        $parent_point = null;
+                        while ($this->close_list) {
+                            $src_point = array_shift($this->close_list);
+                            $adjoin_points = $src_point->getAdjoinPoints();
+                            if ($this->inPoints($point, $adjoin_points)) {
+                                $parent_point = $src_point;
+                                break;
+                            }
+                        }
+                        if ($parent_point === null) {
+                            return null;
+                        }
+                        while ($point) {
+                            $tmp_point = $point->parent;
+                            $point->parent = $parent_point;
+                            $parent_point = $point;
+                            $point = $tmp_point;
+                        }
+                    }
                     break;
                 }
+            }
+            if ($is_find) {
+                break;
             }
         }
         if (!$is_find) {
