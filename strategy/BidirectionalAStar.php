@@ -83,9 +83,6 @@ class BidirectionalAStar extends AStar
             // 判断open_list是否重叠
             foreach ($this->open_list as $point) {
                 if ($this->inPoints($point, $this->dst_open_list)) {
-                    /**
-                     * TODO: 队首和队尾怎么拼接，相交结点的父节点只能指向一边，另一边该怎么拼接
-                     */
                     $is_find = true;
                     $road = $this->map->getRoad($point);
                     if ($road[0]->equal($this->src_point)) {
