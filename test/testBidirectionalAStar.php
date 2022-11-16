@@ -1,6 +1,6 @@
 <?php
 
-use common\Matrix;
+use common\map\Matrix;
 use strategy\BidirectionalAStar;
 
 require_once "../vendor/autoload.php";

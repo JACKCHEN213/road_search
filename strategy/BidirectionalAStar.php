@@ -2,8 +2,8 @@
 
 namespace strategy;
 
-use common\Map;
-use common\Point;
+use common\map\Map;
+use common\point\Point;
 
 class BidirectionalAStar extends AStar
 {

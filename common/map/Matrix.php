@@ -1,8 +1,7 @@
 <?php
 
-namespace common;
+namespace common\map;
 
-use Exception;
 use strategy\Base;
 
 class Matrix extends Map

@@ -2,8 +2,6 @@
 
 namespace strategy;
 
-use common\Point;
-
 class GreedyBestFirstSearch extends Base
 {
     protected function popNextPoint(array &$points)

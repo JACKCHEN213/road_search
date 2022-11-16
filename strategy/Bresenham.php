@@ -2,7 +2,7 @@
 
 namespace strategy;
 
-use common\Point;
+use common\point\Point;
 
 /**
  * A星算法优化

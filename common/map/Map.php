@@ -1,6 +1,9 @@
 <?php
 
-namespace common;
+namespace common\map;
+
+use common\point\Point;
+use common\Color;
 
 abstract class Map
 {

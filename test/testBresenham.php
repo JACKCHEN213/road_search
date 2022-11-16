@@ -1,6 +1,6 @@
 <?php
 
-use common\Matrix;
+use common\map\Matrix;
 use strategy\Bresenham;
 
 require_once "../vendor/autoload.php";
