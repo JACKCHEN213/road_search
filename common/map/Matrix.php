@@ -3,6 +3,7 @@
 namespace common\map;
 
 use strategy\Base;
+use common\point\Point;
 
 class Matrix extends Map
 {

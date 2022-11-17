@@ -72,6 +72,11 @@ class Puzzle implements Node
         $this->children[] = $puzzle;
     }
 
+    public function clearChildren()
+    {
+        $this->children = [];
+    }
+
     public function printChildren($plain = true)
     {
         echo "[\n";
@@ -130,5 +135,46 @@ class Puzzle implements Node
             $puzzle = $puzzle->parent;
         }
         return $roads;
+    }
+
+    public function getInverseNumber(): int
+    {
+        $map = $this->getPrimitiveMap();
+        $inverse_number = 0;
+        foreach ($map as $index => $value) {
+            if ($value == 0) {
+                continue;
+            }
+            for ($i = 0; $i < $index; $i++) {
+                if ($map[$i] == 0) {
+                    continue;
+                }
+                if ($map[$i] > $value) {
+                    $inverse_number++;
+                }
+            }
+        }
+        return $inverse_number;
+    }
+
+    public function getMoveDirection(Puzzle $puzzle): string
+    {
+        $pos = $this->getZeroPos();
+        $pos1 = $puzzle->getZeroPos();
+        if ($pos[0] == $pos1[0]) {
+            // 左右移动
+            if ($pos[1] > $pos1[1]) {
+                // 左移动
+                return 'left';
+            }
+            return 'right';
+        } else {
+            // 上下移动
+            if ($pos[0] > $pos1[0]) {
+                // 上移动
+                return 'top';
+            }
+            return 'bottom';
+        }
     }
 }
