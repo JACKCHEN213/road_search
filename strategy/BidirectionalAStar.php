@@ -49,6 +49,13 @@ class BidirectionalAStar extends AStar
                         $adjoin_point->parent = $current_point;
                     }
                 }
+                if ($this->dst_point->equal($adjoin_point)) {
+                    $is_find = true;
+                    break;
+                }
+            }
+            if ($is_find) {
+                break;
             }
 
             $dst_current_point = $this->popNextPoint($this->dst_open_list);

@@ -2,9 +2,11 @@
 
 namespace strategy;
 
+use common\point\Point;
+
 class AStar extends Base
 {
-    protected function popNextPoint(array &$points)
+    protected function popNextPoint(array &$points): Point
     {
         $min_priority = 'inf';
         $ret_index = 0;

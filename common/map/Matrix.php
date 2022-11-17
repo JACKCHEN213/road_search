@@ -4,6 +4,7 @@ namespace common\map;
 
 use strategy\Base;
 use common\point\Point;
+use common\Color;
 
 class Matrix extends Map
 {
