@@ -2,7 +2,7 @@
 
 namespace common\point;
 
-class Point
+class Point implements Node
 {
     public int $x;
     public int $y;
