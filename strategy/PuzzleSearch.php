@@ -61,6 +61,18 @@ class PuzzleSearch
         }
     }
 
+    private function render($is_find)
+    {
+        if (!$is_find) {
+            echo "移动不到目标位置" . PHP_EOL;
+        } else {
+            $roads = $this->dst_puzzle->getRoads();
+            echo "需要移动" . (count($roads) - 1) . "步" . PHP_EOL;
+            $this->printRoads($roads, false);
+            echo "移动的路径为：" . $this->getMoveDirection($roads) . PHP_EOL;
+        }
+    }
+
     public function bfs()
     {
         echo "*********** start Puzzle BFS **********" . PHP_EOL;
@@ -112,14 +124,7 @@ class PuzzleSearch
             $search_time++;
             echo "搜索第{$search_time}次，层级{$current_puzzle->level}" . PHP_EOL;
         }
-        if (!$is_find) {
-            echo "移动不到目标位置" . PHP_EOL;
-        } else {
-            $roads = $this->dst_puzzle->getRoads();
-            echo "需要移动" . (count($roads) - 1) . "步" . PHP_EOL;
-            $this->printRoads($roads, false);
-            echo "移动的路径为：" . $this->getMoveDirection($roads) . PHP_EOL;
-        }
+        $this->render($is_find);
         echo "*********** stop Puzzle BFS **********" . PHP_EOL;
     }
 
@@ -248,14 +253,77 @@ class PuzzleSearch
                 break;
             }
         }
-        if (!$is_find) {
-            echo "移动不到目标位置" . PHP_EOL;
-        } else {
-            $roads = $this->dst_puzzle->getRoads();
-            echo "需要移动" . (count($roads) - 1) . "步" . PHP_EOL;
-            $this->printRoads($roads, false);
-            echo "移动的路径为：" . $this->getMoveDirection($roads) . PHP_EOL;
-        }
+        $this->render($is_find);
         echo "*********** stop Puzzle Bidirectional BFS **********" . PHP_EOL;
+    }
+
+    private function popNextPuzzle(array &$open_list): Puzzle
+    {
+        $ret_index = 0;
+        $min = 'inf';
+        array_walk($open_list, function (Puzzle $puzzle, $index) use (&$min, &$ret_index) {
+            if ($min == 'inf' || $min > $puzzle->level + $puzzle->similar) {
+                $min = $puzzle->level + $puzzle->similar;
+                $ret_index = $index;
+            }
+        });
+        return array_splice($open_list, $ret_index, 1)[0];
+    }
+
+    public function aStar()
+    {
+        echo "*********** start Puzzle A Star **********" . PHP_EOL;
+        $is_find = false;
+        $this->src_puzzle->setSimilar($this->dst_puzzle->getPrimitiveMap());
+        $open_list = [$this->src_puzzle];
+        $close_list = [];
+        $search_time = 0;
+        while ($open_list) {
+            $current_puzzle = $this->popNextPuzzle($open_list);
+            if (!$current_puzzle instanceof Puzzle) {
+                // 这一步是IDEA类型提示、跳转
+                continue;
+            }
+            $close_list[] = $current_puzzle;
+            if ($current_puzzle->equal($this->dst_puzzle)) {
+                $is_find = true;
+                $this->dst_puzzle = $current_puzzle;
+                echo "搜索到结果了！" . PHP_EOL;
+                break;
+            }
+            $pos = $current_puzzle->getZeroPos();
+            if ($pos[0] == -1 || $pos[1] == -1) {
+                break;
+            }
+            $moves = ['left' => 1, 'right' => 1, 'top' => 1, 'bottom' => 1];
+            if ($pos[0] == 0) {
+                unset($moves['top']);
+            } elseif ($pos[0] == $current_puzzle->getLength() - 1) {
+                unset($moves['bottom']);
+            }
+            if ($pos[1] == 0) {
+                unset($moves['left']);
+            } elseif ($pos[1] == $current_puzzle->getLength() - 1) {
+                unset($moves['right']);
+            }
+            foreach ($moves as $direction => $placeholder) {
+                $child_puzzle = $current_puzzle->moving($direction, $pos);
+                if (
+                    $this->inPuzzles($child_puzzle, $open_list)
+                    || $this->inPuzzles($child_puzzle, $close_list)
+                ) {
+                    continue;
+                }
+                $child_puzzle->setSimilar($this->dst_puzzle->getPrimitiveMap());
+                $child_puzzle->level = $current_puzzle->level + 1;
+                $child_puzzle->parent = $current_puzzle;
+                $current_puzzle->setChild($child_puzzle);
+                $open_list[] = $child_puzzle;
+            }
+            $search_time++;
+            echo "搜索第{$search_time}次，层级{$current_puzzle->level}" . PHP_EOL;
+        }
+        $this->render($is_find);
+        echo "*********** stop Puzzle A Star **********" . PHP_EOL;
     }
 }

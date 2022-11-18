@@ -7,6 +7,7 @@ class Puzzle implements Node
     private array $map;
     private array $children;
     public int $level = 0;
+    public int $similar = 0;
     public ?Puzzle $parent = null;
 
     public function __construct(array $map)
@@ -24,7 +25,7 @@ class Puzzle implements Node
         }
     }
 
-    private function getPrimitiveMap(): array
+    public function getPrimitiveMap(): array
     {
         $primitive_map = [];
         foreach ($this->map as $x => $row) {
@@ -175,6 +176,15 @@ class Puzzle implements Node
                 return 'top';
             }
             return 'bottom';
+        }
+    }
+
+    public function setSimilar(array $primitive_map)
+    {
+        foreach ($this->getPrimitiveMap() as $index => $value) {
+            if ($primitive_map[$index] != $value) {
+                $this->similar++;
+            }
         }
     }
 }
