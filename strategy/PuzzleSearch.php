@@ -225,29 +225,22 @@ class PuzzleSearch
                     }
                     break;
                 }
-                if ($this->inPuzzles($puzzle, $tail_open_list)) {
-                    // 找到了
-                    $is_find = true;
-                    $roads = $puzzle->getRoads();
-                    if ($roads[0]->equal($this->src_puzzle)) {
-                        // 头搜索找到，队尾在tail_close_list里面
-                        while ($tail_puzzle) {
-                            $this->dst_puzzle = $tail_puzzle;
-                            $tail_parent_puzzle = $tail_puzzle->parent;
-                            $tail_puzzle->parent = $puzzle;
-                            $puzzle = $tail_puzzle;
-                            $tail_puzzle = $tail_parent_puzzle;
+                foreach ($tail_close_list as $tail_close_puzzle) {
+                    if ($tail_close_puzzle->equal($puzzle)) {
+                        $this->dst_puzzle = $puzzle;
+                        $tail_close_puzzle = $tail_close_puzzle->parent;
+                        while ($tail_close_puzzle) {
+                            $this->dst_puzzle = $tail_close_puzzle;
+                            $tail_parent_puzzle = $tail_close_puzzle->parent;
+                            $tail_close_puzzle->parent = $puzzle;
+                            $puzzle = $tail_close_puzzle;
+                            $tail_close_puzzle = $tail_parent_puzzle;
                         }
-                    } else {
-                        // 尾搜索找到，队首在head_close_list里
-                        while ($puzzle) {
-                            $this->dst_puzzle = $puzzle;
-                            $parent_puzzle = $puzzle;
-                            $puzzle->parent = $head_puzzle;
-                            $head_puzzle = $puzzle;
-                            $puzzle = $parent_puzzle;
-                        }
+                        $is_find = true;
+                        break;
                     }
+                }
+                if ($is_find) {
                     break;
                 }
             }

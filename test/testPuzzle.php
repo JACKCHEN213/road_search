@@ -14,5 +14,5 @@ $dst_puzzle = new Puzzle($map['simple2']['dst_puzzle']);
 $puzzle_search = new PuzzleSearch($src_puzzle, $dst_puzzle);
 // puzzle_8的simple1要搜索4805次，移动15步，→→↓←←↑→↓→↑←←↓→→
 $puzzle_search->bfs();
-// puzzle_8的simple1要搜索91次，移动15步，→→↓←←↑→↓↓←↑→↑→↓
+// puzzle_8的simple1要搜索91次，  移动15步，→→↓←←↑→↓→↑←←↓→→
 $puzzle_search->bidirectionalBfs();
