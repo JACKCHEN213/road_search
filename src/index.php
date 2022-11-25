@@ -11,10 +11,13 @@ $extra = $asset_8x8['simple1'];
 
 $map = new Matrix(8, 8, $extra);
 
-echo "<table>";
+echo '<div>';
 foreach ($map->getMap() as $row) {
+    echo '<div style="display: flex">';
     foreach ($row as $point) {
-        echo "x = $point->x<br/>";
+        echo '<div style="display: inline-flex;width: 50px;height: 30px;border: 1px solid black; justify-content: center; align-items: center;">('
+            . $point->x . ',' . $point->y . ')' . '</div>';
     }
+    echo '</div>';
 }
-echo "<table/>";
+echo '</div>';
