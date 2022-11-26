@@ -114,4 +114,5 @@
 .disable {
     cursor: not-allowed;
     background: #ddd;
+    border-color: #fff;
 }

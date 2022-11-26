@@ -2,12 +2,15 @@
     margin: 0;
     padding: 0;
 }
+
 #map {
     padding: 50px 100px;
 }
+
 .row {
     display: flex;
 }
+
 .node {
     display: inline-flex;
     width: 50px;
@@ -15,7 +18,13 @@
     border: 1px solid black;
     justify-content: center;
     align-items: center;
+    cursor: default;
 }
+
+#points {
+    background-color: #3a8ee6;
+}
+
 #control {
     height: 100px;
     display: flex;
