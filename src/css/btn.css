@@ -112,6 +112,7 @@
 }
 
 .disable {
+    color: #fff;
     cursor: not-allowed;
     background: #ddd;
     border-color: #fff;

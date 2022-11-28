@@ -74,10 +74,10 @@ EOF;
 // 控制按钮
 echo <<<EOF
 <div id="control">
-  <button class="btn primary">开始</button>
-  <button class="btn success">重新开始</button>
-  <button class="btn info">下一步</button>
-  <button class="btn warning">持续运行</button>
+  <button id="start_btn" class="btn primary">开始</button>
+  <button id="restart_btn" class="btn success">重新开始</button>
+  <button id="next_btn" class="btn info">下一步</button>
+  <button id="running_btn" class="btn warning">持续运行</button>
 </div>
 EOF;
 
@@ -88,10 +88,18 @@ echo <<<EOF
     let inputs = document.getElementsByClassName('input');
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].classList.add('disable');
-      inputs[i].oninput = function() {
-          inputs[i].innerHTML = inputs[i].innerHTML;
-      }
+      inputs[i].disabled = 'true';
     }
+
+    let start_btn = document.getElementById('start_btn');
+    let restart_btn = document.getElementById('restart_btn');
+    let next_btn = document.getElementById('next_btn');
+    let running_btn = document.getElementById('running_btn');
+    start_btn.addEventListener('mousedown', function(e) {
+        start_btn.innerHTML = 'click';
+        start_btn.classList.remove('primary');
+        start_btn.classList.add('disable');
+    });
   </script>
   </body>
 </html>
