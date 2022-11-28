@@ -8,6 +8,8 @@ $asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
 $extra = $asset_8x8['simple1'];
 
 $map = new Matrix(8, 8, $extra);
+$src_point = $map->getPoint(0, 0);
+$dst_point = $map->getPoint(7, 5);
 
 echo <<<EOF
 <!DOCTYPE html>
@@ -36,18 +38,36 @@ echo '</div>';
 // 输入框
 echo <<<EOF
 <div id="points">
-  <div class="points_select">
+  <div class="points_left">
     <div class="point">
-      <span>起始点</span>
-      <p><span>x:&nbsp;</span><input name="src_x" type="text" /></p>
-      <p><span>y:&nbsp;</span><input name="src_y" type="text" /></p>
+      <span class="text">起始点</span>
+      <div class="input_bar">
+        <p>
+          <span>x:&nbsp;</span>
+          <input class="input" autocomplete="off" name="src_x" type="text" value="$src_point->x" />
+        </p>
+        <p>
+          <span>y:&nbsp;</span>
+          <input class="input" autocomplete="off" name="src_y" type="text" value="$src_point->y" />
+        </p>
+      </div>
     </div>
     <div class="point">
-      <span>终止点</span>
-      <p><span>x:&nbsp;</span><input name="dst_x" type="text" /></p>
-      <p><span>y:&nbsp;</span><input name="dst_y" type="text" /></p>
+      <span class="text">终止点</span>
+      <div class="input_bar">
+        <p>
+          <span>x:&nbsp;</span>
+          <input class="input" autocomplete="off" name="src_x" type="text" value="$dst_point->x" />
+        </p>
+        <p>
+          <span>y:&nbsp;</span>
+          <input class="input" autocomplete="off" name="src_y" type="text" value="$dst_point->y" />
+        </p>
+      </div>
     </div>
   </div>
+  <div class="point_center">初始化值</div>
+  <div class="point_right">过程</div>
 </div>
 EOF;
 
@@ -64,7 +84,15 @@ EOF;
 echo '</div>';
 
 echo <<<EOF
-  <script type="application/javascript" src="js/index.js"></script>
+  <script type="application/javascript">
+    let inputs = document.getElementsByClassName('input');
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].classList.add('disable');
+      inputs[i].oninput = function() {
+          inputs[i].innerHTML = inputs[i].innerHTML;
+      }
+    }
+  </script>
   </body>
 </html>
 EOF;

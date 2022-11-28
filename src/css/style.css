@@ -4,14 +4,14 @@
 }
 
 #map {
-    padding: 50px 100px;
+    padding: 30px 100px;
 }
 
-.row {
+#map .row {
     display: flex;
 }
 
-.node {
+#map .node {
     display: inline-flex;
     width: 50px;
     height: 30px;
@@ -22,12 +22,51 @@
 }
 
 #points {
-    background-color: #3a8ee6;
+    height: 140px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin-left: 20px;
+}
+
+#points .points_left {
+    width: 200px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+#points .point {
+    margin: 4px 0;
+}
+
+#points .point .text {
+    font-size: 16px;
+}
+
+#points .point .input_bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
+}
+
+#points .point .input_bar p {
+    margin: 0 5px;
+}
+
+#points .point_center {
+    width: 200px;
+}
+
+#points .point_right {
+    min-width: 200px;
 }
 
 #control {
-    height: 100px;
+    height: 50px;
     display: flex;
-    padding: 20px 50px;
+    padding: 0 50px;
     align-items: center;
 }

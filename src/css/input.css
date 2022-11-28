@@ -1,0 +1,32 @@
+input.input {
+    width: 50px;
+}
+
+input.input {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 20px;
+    line-height: 20px;
+    outline: none;
+    padding: 0 5px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 40px;
+}
+
+input.input:focus {
+    outline: none;
+    border-color: #409eff;
+}
+
+input.disable {
+    background-color: #dcdfe6;
+    color: #a6a9ad;
+    cursor: not-allowed;
+}
