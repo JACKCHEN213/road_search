@@ -1,0 +1,16 @@
+.legend {
+    display: flex;
+    flex-direction: column;
+}
+
+.l_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.l_cube {
+    width: 30px;
+    height: 16px;
+    margin: 2px 16px 2px 0;
+}

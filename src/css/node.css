@@ -1,0 +1,33 @@
+.node {
+    display: inline-flex;
+    width: 50px;
+    height: 30px;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+}
+
+.src_node {
+    background-color: green;
+}
+
+.dst_node {
+    background-color: cyan;
+}
+
+.block_node {
+    background-color: purple;
+}
+
+.close_node {
+    background-color: red;
+}
+
+.open_node {
+    background-color: yellow;
+}
+
+.road_node {
+    background-color: bisque;
+}
