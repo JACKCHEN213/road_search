@@ -2,9 +2,11 @@
 
 namespace strategy;
 
+use common\point\Point;
+
 class GreedyBestFirstSearch extends Base
 {
-    protected function popNextPoint(array &$points)
+    protected function popNextPoint(array &$points): Point
     {
         $min_distance = 'inf';
         $ret_index = 0;
@@ -15,6 +17,29 @@ class GreedyBestFirstSearch extends Base
             }
         }
         return array_splice($points, $ret_index, 1)[0];
+    }
+
+    protected function calculateCostAndDistance(Point $current_point)
+    {
+        $adjoin_points = $current_point->getAdjoinPoints();
+        foreach ($adjoin_points as $adjoin_point) {
+            $flag = false;
+            if ($this->inPoints($adjoin_point, $this->open_list)) {
+                $flag = true;
+            }
+            if ($this->inPoints($adjoin_point, $this->close_list)) {
+                $flag = true;
+            }
+            if (!$flag) {
+                // 加入open_list
+                $this->open_list[] = $adjoin_point;
+                $adjoin_point->parent = $current_point;
+                $adjoin_point->cost = $adjoin_point->getPrice() + $current_point->cost;
+                // $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
+                $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
+                // $adjoin_point->distance = $current_point->distance + $this->getEuclideanDistance($adjoin_point);
+            }
+        }
     }
 
     public function start()
@@ -30,25 +55,7 @@ class GreedyBestFirstSearch extends Base
                 // break;
             }
             $this->close_list[] = $current_point;
-            $adjoin_points = $current_point->getAdjoinPoints();
-            foreach ($adjoin_points as $adjoin_point) {
-                $flag = false;
-                if ($this->inPoints($adjoin_point, $this->open_list)) {
-                    $flag = true;
-                }
-                if ($this->inPoints($adjoin_point, $this->close_list)) {
-                    $flag = true;
-                }
-                if (!$flag) {
-                    // 加入open_list
-                    $this->open_list[] = $adjoin_point;
-                    $adjoin_point->parent = $current_point;
-                    $adjoin_point->cost = $adjoin_point->getPrice() + $current_point->cost;
-                    // $adjoin_point->distance = $current_point->distance + $this->getManhattanDistance($adjoin_point);
-                    $adjoin_point->distance = $current_point->distance + $this->getDiagonalDistance($adjoin_point);
-                    // $adjoin_point->distance = $current_point->distance + $this->getEuclideanDistance($adjoin_point);
-                }
-            }
+            $this->calculateCostAndDistance($current_point);
         }
         if (!$is_find) {
             echo "没有找到到达的路径" . PHP_EOL;

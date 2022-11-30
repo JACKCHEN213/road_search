@@ -2,9 +2,11 @@
 
 namespace strategy;
 
+use common\point\Point;
+
 class Dijkstra extends Base
 {
-    protected function popNextPoint(array &$points)
+    protected function popNextPoint(array &$points): Point
     {
         $min_cost = 'inf';
         $ret_index = 0;
@@ -28,22 +30,7 @@ class Dijkstra extends Base
                 $is_find = true;
             }
             $this->close_list[] = $current_point;
-            $adjoin_points = $current_point->getAdjoinPoints();
-            foreach ($adjoin_points as $adjoin_point) {
-                $flag = false;
-                if ($this->inPoints($adjoin_point, $this->open_list)) {
-                    $flag = true;
-                }
-                if ($this->inPoints($adjoin_point, $this->close_list)) {
-                    $flag = true;
-                }
-                if (!$flag) {
-                    // 加入open_list
-                    $this->open_list[] = $adjoin_point;
-                    $adjoin_point->parent = $current_point;
-                    $adjoin_point->cost = $current_point->cost + $adjoin_point->getPrice();
-                }
-            }
+            $this->calculateCostAndDistance($current_point);
             // 打印搜索过程
             // if (isset($this->open_list[0])) {
             //     $this->render();

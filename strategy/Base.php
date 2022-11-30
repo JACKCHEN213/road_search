@@ -20,7 +20,7 @@ abstract class Base
         $this->map = $map;
     }
 
-    protected function popNextPoint(array &$points)
+    protected function popNextPoint(array &$points): Point
     {
         return array_shift($points);
     }
@@ -66,6 +66,25 @@ abstract class Base
         return $d * sqrt($dx * $dx + $dy * $dy);
     }
 
+    protected function calculateCostAndDistance(Point $current_point)
+    {
+        $adjoin_points = $current_point->getAdjoinPoints();
+        foreach ($adjoin_points as $adjoin_point) {
+            $flag = false;
+            if ($this->inPoints($adjoin_point, $this->open_list)) {
+                $flag = true;
+            }
+            if ($this->inPoints($adjoin_point, $this->close_list)) {
+                $flag = true;
+            }
+            if (!$flag) {
+                // 加入open_list
+                $this->open_list[] = $adjoin_point;
+                $adjoin_point->parent = $current_point;
+                $adjoin_point->cost = $current_point->cost + $adjoin_point->getPrice();
+            }
+        }
+    }
 
     public static function inPoints(Point $detect_point, array $points): bool
     {
