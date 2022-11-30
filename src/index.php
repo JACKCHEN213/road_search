@@ -3,13 +3,14 @@
 require_once "../vendor/autoload.php";
 
 use common\map\Matrix;
+use strategy\Base;
 use strategy\BreadthFirstSearch;
 
 $asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
 $extra = $asset_8x8['simple1'];
 
 $map = new Matrix(8, 8, $extra);
-$src_point = $map->getPoint(0, 0);
+$src_point = $map->getPoint();
 $dst_point = $map->getPoint(7, 5);
 ob_start();
 $breadth_first_search = new BreadthFirstSearch($src_point, $dst_point, $map);
@@ -28,6 +29,7 @@ echo <<<EOF
     <link rel="stylesheet" type="text/css" href="css/input.css">
     <link rel="stylesheet" type="text/css" href="css/node.css">
     <link rel="stylesheet" type="text/css" href="css/legend.css">
+    <link rel="stylesheet" type="text/css" href="css/road.css">
   </head>
   <body>
 EOF;
@@ -45,7 +47,7 @@ foreach ($map->getMap() as $x => $row) {
             echo ' dst_node';
         } elseif ($point->getBlock()) {
             echo ' block_node';
-        } elseif (\strategy\Base::inPoints($point, $roads)) {
+        } elseif (Base::inPoints($point, $roads)) {
             echo ' road_node';
         }
         echo '" id="node' . $x . $y . '">' . $point->getPrice() . '</div>';
@@ -89,27 +91,43 @@ echo <<<EOF
     <div class="legend">
       <div class="l_item">
         <div class="l_cube src_node"></div>
-        <span>起始点</span>
+        <span class="l_text">起始点</span>
+      </div>
+      <div class="l_item">
+        <div class="l_cube road_node"></div>
+        <span class="l_text">路径</span>
       </div>
       <div class="l_item">
         <div class="l_cube dst_node"></div>
-        <span>终止点</span>
+        <span class="l_text">终止点</span>
       </div>
       <div class="l_item">
         <div class="l_cube block_node"></div>
-        <span>阻塞点</span>
+        <span class="l_text">阻塞点</span>
       </div>
       <div class="l_item">
         <div class="l_cube open_node"></div>
-        <span>open_list</span>
+        <span class="l_text">open_list</span>
       </div>
       <div class="l_item">
         <div class="l_cube close_node"></div>
-        <span>close_list</span>
+        <span class="l_text">close_list</span>
       </div>
     </div>
   </div>
-  <div class="point_right">过程</div>
+  <div class="point_right">
+    <span>结果路径</span>
+    <div class="roads">
+EOF;
+foreach ($roads as $index => $point) {
+    echo '<div class="road">(' . $point->x . ', ' . $point->y . ')</div>';
+    if ($index < count($roads) - 1) {
+        echo '<div class="road_link"> => </div>';
+    }
+}
+echo <<<EOF
+    </div>
+  </div>
 </div>
 EOF;
 
@@ -141,8 +159,8 @@ echo <<<EOF
     let restart_btn = document.getElementById('restart_btn');
     let next_btn = document.getElementById('next_btn');
     let running_btn = document.getElementById('running_btn');
-    start_btn.className = 'btn primary';
-    start_btn.disabled = false;
+    // start_btn.className = 'btn primary';
+    // start_btn.disabled = false;
     start_btn.onclick = function () {
         start_btn.className  = 'btn disable';
         start_btn.disabled = true;

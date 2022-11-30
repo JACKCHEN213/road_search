@@ -1,0 +1,30 @@
+.roads {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: scroll;
+    height: 110px;
+    border-radius: 5px;
+}
+
+.roads::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.road {
+    width: 50px;
+    height: 30px;
+    background-color: bisque;
+    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.road_link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

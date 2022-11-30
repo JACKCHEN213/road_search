@@ -1,16 +1,38 @@
 .legend {
+    height: 110px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: scroll;
+}
+
+.legend::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 .l_item {
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 140px;
+    margin-top: 5px;
+}
+
+.l_item:nth-child(odd) {
+    margin-right: 20px;
 }
 
 .l_cube {
     width: 30px;
     height: 16px;
-    margin: 2px 16px 2px 0;
+    margin: 2px 5px 2px 0;
+}
+
+.l_text {
+    max-width: 100px;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
