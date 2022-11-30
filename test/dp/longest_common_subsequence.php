@@ -1,25 +1,36 @@
 <?php
 
-$src = "international";
-$dst = "name";
+function get_longest_subsequence($src, $dst): array
+{
 
-$dp = [];
+    $dp = [];
 
-for ($i = 0; $i <= strlen($src); $i++) {
-    $dp[$i] = [];
-    for ($j = 0; $j <= strlen($dst); $j++) {
-        $dp[$i][$j] = [
-            'count' => 0,
-            'chars' => [],
-        ];
-        if ($i == 0 || $j == 0) {
-            continue;
-        }
-        if ($src[$i - 1] == $dst[$j - 1]) {
-            $dp[$i][$j]['count'] = $dp[$i - 1][$j - 1]['count'] + 1;
-            $dp[$i][$j]['chars'] = array_merge($dp[$i - 1][$j - 1]['chars'], [$dst[$j - 1]]);
+    for ($i = 0; $i <= strlen($src); $i++) {
+        $dp[$i] = [];
+        for ($j = 0; $j <= strlen($dst); $j++) {
+            $dp[$i][$j] = [
+                'count' => 0,
+                'chars' => [],
+            ];
+            if ($i == 0 || $j == 0) {
+                continue;
+            }
+            if ($src[$i - 1] == $dst[$j - 1]) {
+                $dp[$i][$j]['count'] = $dp[$i - 1][$j - 1]['count'] + 1;
+                $dp[$i][$j]['chars'] = array_merge($dp[$i - 1][$j - 1]['chars'], [$dst[$j - 1]]);
+            } else {
+                // 不需要连续
+                if ($dp[$i][$j - 1]['count'] > $dp[$i - 1][$j]['count']) {
+                    $dp[$i][$j]['count'] = $dp[$i][$j - 1]['count'];
+                    $dp[$i][$j]['chars'] = array_merge($dp[$i][$j - 1]['chars'], []);
+                } else {
+                    $dp[$i][$j]['count'] = $dp[$i - 1][$j]['count'];
+                    $dp[$i][$j]['chars'] = array_merge($dp[$i - 1][$j]['chars'], []);
+                }
+            }
         }
     }
+    return $dp;
 }
 
 function print_process($dp, $src, $dst)
@@ -68,9 +79,13 @@ function print_result($dp)
     }
     echo PHP_EOL . "========= print result ==========" . PHP_EOL;
     echo "count: {$max_count}, subsequence: {$longest_subsequence},"
-        . " src position: {$position_src}, dst position； {$position_dst}" . PHP_EOL;
+        . " src position: {$position_src}, dst position: {$position_dst}" . PHP_EOL;
 }
 
+$src = "fish";
+$dst = "fosh";
+
+$dp = get_longest_subsequence($src, $dst);
 echo "src: {$src}, dst: {$dst}" . PHP_EOL;
 print_process($dp, $src, $dst);
 print_result($dp);
