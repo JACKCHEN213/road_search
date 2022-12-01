@@ -13,6 +13,9 @@ $src_point = $map->getPoint();
 $dst_point = $map->getPoint(7, 5);
 $breadth_first_search = new BreadthFirstSearchEx($src_point, $dst_point, $map);
 
+while ($breadth_first_search->next() == 'searching') {
+}
+
 echo <<<EOF
 <!DOCTYPE html>
 <html lang="zh">
@@ -132,9 +135,9 @@ echo <<<EOF
         draw.drawMap(map);
         draw.drawSrcAndDst(src_node, dst_node);
         draw.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'), [src_node, dst_node]);
+        road.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'));
         
         button.setStyle();
-        button.setStyle('enable_start');
     }
     init();
     button.startBtn.onclick = function (ev) {
@@ -148,14 +151,6 @@ echo <<<EOF
     }
     
     button.nextBtn.onclick = function(ev) {
-        let ret = '{$breadth_first_search->next()}';
-        if (ret === 'searching') {
-            console.log('{$breadth_first_search->seq}');
-        } else if (ret === 'find') {
-            button.setStyle('disable_next');
-        } else {
-            button.setStyle('disable_next');
-        }
     }
     
     button.runningBtn.onclick = function(ev) {
