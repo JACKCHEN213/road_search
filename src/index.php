@@ -4,7 +4,7 @@ require_once "../vendor/autoload.php";
 
 use common\map\Matrix;
 use strategy\Base;
-use strategy\BreadthFirstSearch;
+use strategy\ex\BreadthFirstSearchEx;
 
 $asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
 $extra = $asset_8x8['simple1'];
@@ -12,11 +12,12 @@ $extra = $asset_8x8['simple1'];
 $map = new Matrix(8, 8, $extra);
 $src_point = $map->getPoint();
 $dst_point = $map->getPoint(7, 5);
-ob_start();
-$breadth_first_search = new BreadthFirstSearch($src_point, $dst_point, $map);
-$breadth_first_search->start();
-ob_get_contents();
-ob_end_clean();
+$breadth_first_search = new BreadthFirstSearchEx($src_point, $dst_point, $map);
+
+$ret = $breadth_first_search->next();
+while (!is_bool($ret)) {
+    $ret = $breadth_first_search->next();
+}
 $roads = $map->getRoad($dst_point);
 
 echo <<<EOF
@@ -30,6 +31,7 @@ echo <<<EOF
     <link rel="stylesheet" type="text/css" href="css/node.css">
     <link rel="stylesheet" type="text/css" href="css/legend.css">
     <link rel="stylesheet" type="text/css" href="css/road.css">
+    <script src="js/Button.js"></script>
   </head>
   <body>
 EOF;
@@ -145,25 +147,31 @@ echo '</div>';
 
 echo <<<EOF
   <script type="application/javascript">
+    let button = new Button();
     let inputs = document.getElementsByClassName('input');
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].classList.add('disable');
       inputs[i].disabled = true;
     }
     
-    for (let btn of document.getElementsByClassName('btn')) {
-        btn.className  = 'btn disable';
-        btn.disabled = true;
+    button.setStyle();
+    button.setStyle('enable_start');
+    button.startBtn.onclick = function (ev) {
+        button.setStyle('enable_all');
+        button.setStyle('disable_start');
     }
-    let start_btn = document.getElementById('start_btn');
-    let restart_btn = document.getElementById('restart_btn');
-    let next_btn = document.getElementById('next_btn');
-    let running_btn = document.getElementById('running_btn');
-    // start_btn.className = 'btn primary';
-    // start_btn.disabled = false;
-    start_btn.onclick = function () {
-        start_btn.className  = 'btn disable';
-        start_btn.disabled = true;
+    
+    button.restartBtn.onclick = function(ev) {
+        button.setStyle('enable_all');
+        button.setStyle('disable_start');
+    }
+    
+    button.nextBtn.onclick = function(ev) {
+        //
+    }
+    
+    button.runningBtn.onclick = function(ev) {
+        button.setStyle('disable_next');
     }
   </script>
   </body>
