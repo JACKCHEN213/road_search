@@ -17,8 +17,11 @@ abstract class Map
 
     abstract public function initMap();
 
-    public function getMap(): array
+    public function getMap($is_json = false)
     {
+        if ($is_json) {
+            return json_encode($this->map);
+        }
         return $this->map;
     }
 
@@ -36,12 +39,15 @@ abstract class Map
         return $this;
     }
 
-    public function getRoad(Point $point): array
+    public function getRoad(Point $point, $is_json = false)
     {
         $roads = [$point];
         while ($point->parent) {
             $point = $point->parent;
             $roads[] = $point;
+        }
+        if ($is_json) {
+            return json_encode(array_reverse($roads));
         }
         return array_reverse($roads);
     }

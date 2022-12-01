@@ -8,7 +8,10 @@ use strategy\BreadthFirstSearch;
 
 class BreadthFirstSearchEx extends BreadthFirstSearch
 {
-    public bool $is_find = false;
+    /**
+     * @var string [searching find not_find]
+     */
+    public string $search_status = 'searching';
 
     public function __construct(Point $src_point, Point $dst_point, Map $map)
     {
@@ -16,21 +19,21 @@ class BreadthFirstSearchEx extends BreadthFirstSearch
         $this->open_list[] = $this->src_point;
     }
 
-    public function next()
+    public function next(): string
     {
-        if ($this->is_find) {
-            return true;
+        if (!$this->open_list) {
+            $this->search_status = 'not_find';
         }
-        if (!$this->open_list && !$this->is_find) {
-            return false;
+        if (in_array($this->search_status, ['find', 'not_find'])) {
+            return $this->search_status;
         }
         $current_point = $this->popNextPoint($this->open_list);
         $this->close_list[] = $current_point;
         if ($current_point->equal($this->dst_point)) {
-            $this->is_find = true;
-            return true;
+            $this->search_status = 'find';
+            return $this->search_status;
         }
         $this->calculateCostAndDistance($current_point);
-        return ['open_list' => $this->open_list, 'close_list' => $this->close_list];
+        return $this->search_status;
     }
 }

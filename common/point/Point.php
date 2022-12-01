@@ -8,9 +8,9 @@ class Point implements Node
     public int $y;
     public ?Point $parent = null;
     private array $adjoins = [];
-    private string $value = '0';
-    private int $price = 0;
-    private int $block = 0;
+    public string $value = '0';
+    public int $price = 0;
+    public int $block = 0;
     public int $cost = 0;
     public int $distance = 0;
 
@@ -94,6 +94,11 @@ class Point implements Node
         }
         $this->adjoins = $adjoins;
         return $this->adjoins;
+    }
+
+    public function toJson()
+    {
+        return json_encode($this);
     }
 
     public function __toString()

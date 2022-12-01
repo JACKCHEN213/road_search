@@ -3,7 +3,6 @@
 require_once "../vendor/autoload.php";
 
 use common\map\Matrix;
-use strategy\Base;
 use strategy\ex\BreadthFirstSearchEx;
 
 $asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
@@ -13,12 +12,6 @@ $map = new Matrix(8, 8, $extra);
 $src_point = $map->getPoint();
 $dst_point = $map->getPoint(7, 5);
 $breadth_first_search = new BreadthFirstSearchEx($src_point, $dst_point, $map);
-
-$ret = $breadth_first_search->next();
-while (!is_bool($ret)) {
-    $ret = $breadth_first_search->next();
-}
-$roads = $map->getRoad($dst_point);
 
 echo <<<EOF
 <!DOCTYPE html>
@@ -32,6 +25,8 @@ echo <<<EOF
     <link rel="stylesheet" type="text/css" href="css/legend.css">
     <link rel="stylesheet" type="text/css" href="css/road.css">
     <script src="js/Button.js"></script>
+    <script src="js/Draw.js"></script>
+    <script src="js/Road.js"></script>
   </head>
   <body>
 EOF;
@@ -39,23 +34,6 @@ EOF;
 
 echo '<div id="container">';
 echo '<div id="map">';
-foreach ($map->getMap() as $x => $row) {
-    echo '<div class="row" id="row' . $x . '">';
-    foreach ($row as $y => $point) {
-        echo '<div class="node';
-        if ($src_point->equal($point)) {
-            echo ' src_node';
-        } elseif ($dst_point->equal($point)) {
-            echo ' dst_node';
-        } elseif ($point->getBlock()) {
-            echo ' block_node';
-        } elseif (Base::inPoints($point, $roads)) {
-            echo ' road_node';
-        }
-        echo '" id="node' . $x . $y . '">' . $point->getPrice() . '</div>';
-    }
-    echo '</div>';
-}
 echo '</div>';
 // 输入框
 echo <<<EOF
@@ -119,16 +97,7 @@ echo <<<EOF
   </div>
   <div class="point_right">
     <span>结果路径</span>
-    <div class="roads">
-EOF;
-foreach ($roads as $index => $point) {
-    echo '<div class="road">(' . $point->x . ', ' . $point->y . ')</div>';
-    if ($index < count($roads) - 1) {
-        echo '<div class="road_link"> => </div>';
-    }
-}
-echo <<<EOF
-    </div>
+    <div id="roads" class="roads"></div>
   </div>
 </div>
 EOF;
@@ -148,11 +117,20 @@ echo '</div>';
 echo <<<EOF
   <script type="application/javascript">
     let button = new Button();
+    let draw = new Draw();
+    let road = new Road();
     let inputs = document.getElementsByClassName('input');
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].classList.add('disable');
       inputs[i].disabled = true;
     }
+    let map = JSON.parse('{$map->getMap(true)}');
+    let src_node = JSON.parse('{$src_point->toJson()}');
+    let dst_node = JSON.parse('{$dst_point->toJson()}');
+    draw.drawMap(map);
+    draw.drawSrcAndDst(src_node, dst_node);
+    draw.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'), [src_node, dst_node]);
+    road.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'));
     
     button.setStyle();
     button.setStyle('enable_start');
