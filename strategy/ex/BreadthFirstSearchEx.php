@@ -12,6 +12,7 @@ class BreadthFirstSearchEx extends BreadthFirstSearch
      * @var string [searching find not_find]
      */
     public string $search_status = 'searching';
+    public int $seq = 0;
 
     public function __construct(Point $src_point, Point $dst_point, Map $map)
     {
@@ -21,6 +22,7 @@ class BreadthFirstSearchEx extends BreadthFirstSearch
 
     public function next(): string
     {
+        $this->seq++;
         if (!$this->open_list) {
             $this->search_status = 'not_find';
         }
@@ -35,5 +37,21 @@ class BreadthFirstSearchEx extends BreadthFirstSearch
         }
         $this->calculateCostAndDistance($current_point);
         return $this->search_status;
+    }
+
+    public function getOpenList($is_json = false)
+    {
+        if ($is_json) {
+            return json_encode($this->open_list);
+        }
+        return $this->open_list;
+    }
+
+    public function getCloseList($is_json = false)
+    {
+        if ($is_json) {
+            return json_encode($this->close_list);
+        }
+        return $this->close_list;
     }
 }

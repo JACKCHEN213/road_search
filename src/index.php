@@ -119,21 +119,24 @@ echo <<<EOF
     let button = new Button();
     let draw = new Draw();
     let road = new Road();
-    let inputs = document.getElementsByClassName('input');
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].classList.add('disable');
-      inputs[i].disabled = true;
+    function init() {
+        let inputs = document.getElementsByClassName('input');
+        for (let i = 0; i < inputs.length; i++) {
+          inputs[i].classList.add('disable');
+          inputs[i].disabled = true;
+        }
+
+        let map = JSON.parse('{$map->getMap(true)}');
+        let src_node = JSON.parse('{$src_point->toJson()}');
+        let dst_node = JSON.parse('{$dst_point->toJson()}');
+        draw.drawMap(map);
+        draw.drawSrcAndDst(src_node, dst_node);
+        draw.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'), [src_node, dst_node]);
+        
+        button.setStyle();
+        button.setStyle('enable_start');
     }
-    let map = JSON.parse('{$map->getMap(true)}');
-    let src_node = JSON.parse('{$src_point->toJson()}');
-    let dst_node = JSON.parse('{$dst_point->toJson()}');
-    draw.drawMap(map);
-    draw.drawSrcAndDst(src_node, dst_node);
-    draw.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'), [src_node, dst_node]);
-    road.drawRoads(JSON.parse('{$map->getRoad($dst_point, true)}'));
-    
-    button.setStyle();
-    button.setStyle('enable_start');
+    init();
     button.startBtn.onclick = function (ev) {
         button.setStyle('enable_all');
         button.setStyle('disable_start');
@@ -145,7 +148,14 @@ echo <<<EOF
     }
     
     button.nextBtn.onclick = function(ev) {
-        //
+        let ret = '{$breadth_first_search->next()}';
+        if (ret === 'searching') {
+            console.log('{$breadth_first_search->seq}');
+        } else if (ret === 'find') {
+            button.setStyle('disable_next');
+        } else {
+            button.setStyle('disable_next');
+        }
     }
     
     button.runningBtn.onclick = function(ev) {
