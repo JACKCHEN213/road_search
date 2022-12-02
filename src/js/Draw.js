@@ -33,7 +33,7 @@
 
     Draw.prototype.inPoints = function (point, exclude_points) {
         for (let exclude_point of exclude_points) {
-            if (point['x'] == exclude_point['x'] && point['y'] == exclude_point['y']) {
+            if (point['x'] === exclude_point['x'] && point['y'] === exclude_point['y']) {
                 return true;
             }
         }

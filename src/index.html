@@ -95,6 +95,24 @@
     </div>
 </div>
 <script type="application/javascript">
+    if (!"WebSocket" in window) {
+        alert("浏览器不支持websocket");
+        throw new Error("浏览器不支持websocket");
+    }
+    let ws = new WebSocket("ws://192.168.12.96:1025");
+
+    ws.onopen = function () {
+        console.log("ws连接成功");
+    }
+    ws.onmessage = function (ev) {
+        console.log(ev);
+    }
+    ws.onclose = function (ev) {
+        console.log(ev);
+    }
+    ws.onerror = function (error) {
+        console.log(error);
+    }
     let button = new Button();
     let draw = new Draw();
     let road = new Road();
