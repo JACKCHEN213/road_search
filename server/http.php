@@ -4,8 +4,11 @@ require_once "../vendor/autoload.php";
 
 use common\map\Matrix;
 use strategy\ex\BreadthFirstSearchEx;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+use Swoole\Http\Server;
 
-$http = new Swoole\Http\Server('0.0.0.0', '1026');
+$http = new Server('0.0.0.0', '1026');
 
 $http->on('start', function ($server) {
     echo "启动一个http服务: {$server->host}:{$server->port}" . PHP_EOL;
@@ -14,8 +17,12 @@ $http->on('start', function ($server) {
 $asset_8x8 = json_decode(file_get_contents('../assets/8x8.json'), true);
 $extra = $asset_8x8['simple1'];
 $map = new Matrix(8, 8, $extra);
+$strategy = null;
+$src_point = $map->getPoint(0, 0);
+$dst_point = $map->getPoint(7, 5);
 
-$http->on('request', function (Swoole\Http\Request $request, Swoole\Http\Response $response) use ($map) {
+$http->on('request', function (Request $request, Response $response)
+ use (&$map, &$strategy, &$src_point, &$dst_point) {
     // log
     try {
         $path_info = $request->server['path_info'];
@@ -50,15 +57,29 @@ $http->on('request', function (Swoole\Http\Request $request, Swoole\Http\Respons
         if (!isset($request_data['status'])) {
             throw new Exception('数据缺少索引: status', 2);
         }
+
+        $ret_data = [
+            'map' => $map->getMap(true),
+            'src_point' => $src_point->toJson(),
+            'dst_point' => $dst_point->toJson(),
+            'open_list' => '[]',
+            'close_list' => '[]',
+            'roads' => '[]',
+        ];
         if ($request_data['status'] == 'init') {
-            $ret_data = [
-                'map' => $map->getMap(true),
-                'src_point' => $map->getPoint(0, 0)->toJson(),
-                'dst_point' => $map->getPoint(7, 5)->toJson(),
-                'open_list' => '[]',
-                'close_list' => '[]',
-            ];
             $response->end(json_encode($ret_data));
+        } elseif ($request_data['status'] == 'start') {
+            $strategy = new BreadthFirstSearchEx($src_point, $dst_point, $map);
+            $ret_data['open_list'] = $strategy->getOpenList(true);
+            $ret_data['close_list'] = $strategy->getCloseList(true);
+            if ($strategy->search_status == 'find') {
+                $ret_data['roads'] = $map->getRoad($dst_point, true);
+            } elseif ($strategy->search_status == 'not_find') {
+                $ret_data['roads'] = '["not_find"]';
+            }
+            $response->end(json_encode($ret_data));
+        } elseif ($request_data['status'] == 'next') {
+            $strategy->next();
         } else {
             $response->end(json_encode(['id' => 1, 'name' => 2]));
         }
@@ -72,4 +93,5 @@ $http->on('request', function (Swoole\Http\Request $request, Swoole\Http\Respons
     }
 });
 
+// TODO: 进程不会退出
 $http->start();

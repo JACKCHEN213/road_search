@@ -16,7 +16,6 @@ $breadth_first_search = new BreadthFirstSearchEx($src_point, $dst_point, $map);
 while ($breadth_first_search->next() == 'searching') {
 }
 
-ob_start();
 echo <<<EOF
 <!DOCTYPE html>
 <html lang="zh">
@@ -162,7 +161,3 @@ echo <<<EOF
   </body>
 </html>
 EOF;
-$content = ob_get_contents();
-ob_end_clean();
-file_put_contents('index.html', $content);
-echo $content;
