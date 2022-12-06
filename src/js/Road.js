@@ -4,6 +4,14 @@
     };
 
     Road.prototype.drawRoads = function (roads) {
+        if (!roads.length) {
+            this.roads_node.innerHTML = '';
+            return;
+        }
+        if (typeof roads[0] == 'string' && roads[0] === 'not_find') {
+            this.roads_node.innerHTML = '未找到路径';
+            return;
+        }
         for (let i = 0; i < roads.length; i++) {
             let road_node = document.createElement('div');
             road_node.className = 'road';

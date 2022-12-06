@@ -50,10 +50,23 @@
         }
     };
 
-    Draw.prototype.drawOpenList = function (open_list) {
+    Draw.prototype.drawOpenList = function (open_list, exclude_points) {
         for (let point of open_list) {
+            if (this.inPoints(point, exclude_points)) {
+                continue;
+            }
             let node = document.getElementById('node' + point['x'] + point['y']);
-            node.classList.add('road_node');
+            node.classList.add('open_node');
+        }
+    };
+
+    Draw.prototype.drawCloseList = function (close_list, exclude_points) {
+        for (let point of close_list) {
+            if (this.inPoints(point, exclude_points)) {
+                continue;
+            }
+            let node = document.getElementById('node' + point['x'] + point['y']);
+            node.classList.add('close_node');
         }
     }
 })();

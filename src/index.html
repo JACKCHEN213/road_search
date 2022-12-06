@@ -103,6 +103,7 @@
     let road = new Road();
     let http = new HTTP();
     let point = new Point();
+    let running = null;
 
     function init() {
         point.setStyle();
@@ -116,23 +117,68 @@
         draw.drawSrcAndDst(src_node, dst_node);
         point.setPoints(src_node, dst_node);
     }
+
+    function drawMap(map, src_point, dst_point, open_list, close_list, roads) {
+        draw.drawMap(map);
+        draw.drawOpenList(open_list, [src_point, dst_point]);
+        draw.drawCloseList(close_list, [src_point, dst_point]);
+        draw.drawRoads(roads, [src_point, dst_point]);
+        draw.drawSrcAndDst(src_point, dst_point);
+        road.drawRoads(roads);
+        if (roads.length) {
+            if (running != null) {
+                stopRunning();
+            }
+            button.setStyle('disable_start');
+            button.setStyle('enable_restart');
+            button.setStyle('disable_next');
+            button.setStyle('disable_running');
+        }
+    }
+
+    function startRunning() {
+        button.setStyle('disable_restart');
+        button.setStyle('disable_next');
+        button.runningBtn.innerHTML = '暂停';
+        button.runningBtn.classList.add('danger');
+        running = setInterval(function () {
+            http.getInitData('next', drawMap);
+        }, 100);
+    }
+
+    function stopRunning() {
+        button.setStyle('enable_restart');
+        button.setStyle('enable_next');
+        button.runningBtn.innerHTML = '持续运行';
+        button.runningBtn.classList.remove('danger');
+        clearInterval(running);
+        running = null;
+    }
+
     init();
     http.getInitData('init', initMap);
     button.startBtn.onclick = function (ev) {
         button.setStyle('enable_all');
         button.setStyle('disable_start');
+        http.getInitData('start', drawMap);
     }
 
     button.restartBtn.onclick = function (ev) {
         button.setStyle('enable_all');
         button.setStyle('disable_start');
+        http.getInitData('restart', drawMap);
     }
 
     button.nextBtn.onclick = function (ev) {
+        http.getInitData('next', drawMap);
     }
 
     button.runningBtn.onclick = function (ev) {
-        button.setStyle('disable_next');
+        if (running == null) {
+            startRunning();
+        } else {
+            stopRunning();
+        }
     }
 </script>
 </body>

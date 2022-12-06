@@ -52,6 +52,14 @@ class Matrix extends Map
 
     public function initMap()
     {
+        if ($this->map) {
+            foreach ($this->map as $i => $row) {
+                foreach ($row as $j => $point) {
+                    unset($point);
+                    unset($this->map[$i][$j]);
+                }
+            }
+        }
         $this->map = [];
 
         for ($i = 0; $i < $this->row_len; $i++) {

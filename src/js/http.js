@@ -13,13 +13,14 @@
             if (response.status !== 200) {
                 throw new Error(response.statusText);
             }
-            let {map, open_list, close_list, src_point, dst_point} = response.data;
+            let {map, open_list, close_list, src_point, dst_point, roads} = response.data;
             map = JSON.parse(map);
             src_point = JSON.parse(src_point);
             dst_point = JSON.parse(dst_point);
             open_list = JSON.parse(open_list);
             close_list = JSON.parse(close_list);
-            callback(map, src_point, dst_point, open_list, close_list);
+            roads = JSON.parse(roads);
+            callback(map, src_point, dst_point, open_list, close_list, roads);
         }).catch((error) => {
             console.error(error);
         });

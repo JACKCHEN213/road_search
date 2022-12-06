@@ -7,7 +7,7 @@ use common\Color;
 
 abstract class Map
 {
-    protected array $map;
+    protected array $map = [];
     protected array $extra;
 
     public function __construct(array $extra = [])

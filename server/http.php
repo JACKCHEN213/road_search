@@ -79,7 +79,39 @@ $http->on('request', function (Request $request, Response $response)
             }
             $response->end(json_encode($ret_data));
         } elseif ($request_data['status'] == 'next') {
-            $strategy->next();
+            if ($strategy->search_status == 'find') {
+                $ret_data['roads'] = $map->getRoad($dst_point, true);
+            } elseif ($strategy->search_status == 'not_find') {
+                $ret_data['roads'] = '["not_find"]';
+            } else {
+                $search_status = $strategy->next();
+                if ($search_status == 'find') {
+                    $ret_data['roads'] = $map->getRoad($dst_point, true);
+                } elseif ($search_status == 'not_find') {
+                    $ret_data['roads'] = '["not_find"]';
+                }
+            }
+            $ret_data['open_list'] = $strategy->getOpenList(true);
+            $ret_data['close_list'] = $strategy->getCloseList(true);
+            $response->end(json_encode($ret_data));
+        } elseif ($request_data['status'] == 'restart') {
+            $map->initMap();
+            $map->initExtra();
+            $src_point = $map->getPoint(0, 0);
+            $dst_point = $map->getPoint(7, 5);
+            $strategy = null;
+            $strategy = new BreadthFirstSearchEx($src_point, $dst_point, $map);
+            $ret_data['open_list'] = $strategy->getOpenList(true);
+            $ret_data['close_list'] = $strategy->getCloseList(true);
+            if ($strategy->search_status == 'find') {
+                $ret_data['roads'] = $map->getRoad($dst_point, true);
+            } elseif ($strategy->search_status == 'not_find') {
+                $ret_data['roads'] = '["not_find"]';
+            }
+            $ret_data['map'] = $map->getMap(true);
+            $ret_data['src_point'] = $src_point->toJson();
+            $ret_data['dst_point'] = $dst_point->toJson();
+            $response->end(json_encode($ret_data));
         } else {
             $response->end(json_encode(['id' => 1, 'name' => 2]));
         }
