@@ -31,8 +31,13 @@ $http->on('request', function (Request $request, Response $response)
         if (isset($_SERVER['HTTP_ORIGIN'])) {
             $response->header("Access-Control-Allow-Origin", $_SERVER['HTTP_ORIGIN']);
         }
-        $response->header("Access-Control-Allow-Methods", "GET, POST, DELETE");
-        $response->header("Access-Control-Allow-Headers", "Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type, Accept-Language, Origin, Accept-Encoding");
+        $response->header("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH, PUT");
+        $allow_header = [
+            "Authorization", "DNT", "X-Mx-ReqToken", "Keep-Alive",
+            "User-Agent", "X-Requested-With", "If-Modified-Since", "Cache-Control",
+            "Content-Type", "Accept-Language", "Origin", "Accept-Encoding",
+        ];
+        $response->header("Access-Control-Allow-Headers", implode(", ", $allow_header));
         $response->header('Content-Type', 'application/json;charset=utf-8');
         if (strtolower($request->getMethod()) == 'options') {
             $response->end();
